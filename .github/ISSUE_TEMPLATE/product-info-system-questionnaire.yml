@@ -10,13 +10,13 @@ body:
     attributes:
       value: "## Scope of Project"
 
-  - type: choice
-    id: contains-images
+  - type: dropdown
+    id: deployment-preference
     attributes:
       label: Are there images contained in the product information?
       options:
-        - label: Yes
-        - label: No
+        - Yes
+        - No
     validations:
       required: true
 
@@ -77,13 +77,13 @@ body:
     validations:
       required: true
 
-  - type: choice
-    id: include-confidential
+  - type: dropdown
+    id: deployment-preference
     attributes:
       label: Do you want confidential information included?
       options:
-        - label: Yes
-        - label: No
+        - Yes
+        - No
     validations:
       required: true
 
@@ -209,13 +209,13 @@ body:
     validations:
       required: true
 
-  - type: choice
-    id: future-incorporation
+  - type: dropdown
+    id: deployment-prefernce
     attributes:
       label: Would you like the system to incorporate other types of documentation in the future?
       options:
-        - label: Yes
-        - label: No
+        - Yes
+        - No
     validations:
       required: true
 
