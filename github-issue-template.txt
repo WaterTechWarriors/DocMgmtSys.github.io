@@ -1,0 +1,227 @@
+name: Product Information System Questionnaire
+description: Please answer the following questions to help us understand your requirements for the product information management system.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to fill out this questionnaire. Your responses will help us better understand your needs for the product information management system.
+
+  - type: markdown
+    attributes:
+      value: "## Scope of Project"
+
+  - type: checkbox
+    id: contains-images
+    attributes:
+      label: Are there images contained in the product information?
+      options:
+        - label: Yes
+        - label: No
+    validations:
+      required: true
+
+  - type: textarea
+    id: image-system-requirements
+    attributes:
+      label: If there are images, what do you plan on doing with the system that requires images?
+    validations:
+      required: false
+
+  - type: textarea
+    id: system-questions
+    attributes:
+      label: What kind of questions do you need to ask of the system?
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample-questions
+    attributes:
+      label: Can you provide a sample of 10 dissimilar questions you might ask the system?
+    validations:
+      required: true
+
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: What documents or contents are out of scope?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: deployment-preference
+    attributes:
+      label: What type of deployment is most preferred?
+      options:
+        - Web
+        - Mobile
+        - Both
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## Access Rights"
+
+  - type: textarea
+    id: system-access
+    attributes:
+      label: Who gets access to the system?
+    validations:
+      required: true
+
+  - type: textarea
+    id: confidential-info
+    attributes:
+      label: What information is confidential in documents and what isn't?
+    validations:
+      required: true
+
+  - type: checkbox
+    id: include-confidential
+    attributes:
+      label: Do you want confidential information included?
+      options:
+        - label: Yes
+        - label: No
+    validations:
+      required: true
+
+  - type: textarea
+    id: admin-rights
+    attributes:
+      label: Who makes changes to documentation or has administrative rights to do so?
+    validations:
+      required: true
+
+  - type: input
+    id: privilege-levels
+    attributes:
+      label: How many privilege levels are required?
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## Current System"
+
+  - type: textarea
+    id: current-document-management
+    attributes:
+      label: What are you using for documents management now?
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-software
+    attributes:
+      label: Are you using any software for documents management?
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "### SAP Usage"
+
+  - type: textarea
+    id: sap-usage
+    attributes:
+      label: How are you using SAP?
+    validations:
+      required: true
+
+  - type: textarea
+    id: sap-limitations
+    attributes:
+      label: What are the limitations you experience with SAP that have led you to consider exploring AI?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: sap-ai-integration
+    attributes:
+      label: Are you looking to integrate AI with SAP or replace it?
+      options:
+        - Integrate AI with SAP
+        - Replace SAP with AI
+        - Undecided
+    validations:
+      required: true
+
+  - type: textarea
+    id: sap-likes-dislikes
+    attributes:
+      label: What do you like about SAP and what don't you like about it?
+    validations:
+      required: true
+
+  - type: input
+    id: budget
+    attributes:
+      label: Is there a budget for this project? If so, what is the range?
+    validations:
+      required: true
+
+  - type: textarea
+    id: ai-functionality
+    attributes:
+      label: What kind of functionality are you looking for in this AI system?
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## Data"
+
+  - type: textarea
+    id: document-formats
+    attributes:
+      label: What format are your documents and relevant data? (e.g., PDF, JPEG, MP4, physical documents that need to be scanned, database)
+    validations:
+      required: true
+
+  - type: textarea
+    id: database-info
+    attributes:
+      label: If your data is in a database, which one?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: organization-preference
+    attributes:
+      label: How do you want your documents organized?
+      options:
+        - By product/brand
+        - By use case
+        - Both product/brand and use case
+    validations:
+      required: true
+
+  - type: dropdown
+    id: organization-priority
+    attributes:
+      label: If you chose both product/brand and use case, which has priority for you?
+      options:
+        - Product/brand
+        - Use case
+        - N/A (didn't choose both)
+    validations:
+      required: true
+
+  - type: checkbox
+    id: future-incorporation
+    attributes:
+      label: Would you like the system to incorporate other types of documentation in the future?
+      options:
+        - label: Yes
+        - label: No
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-comments
+    attributes:
+      label: Do you have any additional comments or requirements?
+    validations:
+      required: false
