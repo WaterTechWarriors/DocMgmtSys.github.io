@@ -15,8 +15,8 @@ body:
     attributes:
       label: Are there images contained in the product information?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
     validations:
       required: true
 
@@ -82,8 +82,8 @@ body:
     attributes:
       label: Do you want confidential information included?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
     validations:
       required: true
 
@@ -214,8 +214,8 @@ body:
     attributes:
       label: Would you like the system to incorporate other types of documentation in the future?
       options:
-        - Yes
-        - No
+        - "Yes"
+        - "No"
     validations:
       required: true
 
