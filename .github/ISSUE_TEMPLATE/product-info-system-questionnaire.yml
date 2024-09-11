@@ -49,7 +49,7 @@ body:
       required: true
 
   - type: dropdown
-    id: deployment-preference
+    id: deployment-preference2
     attributes:
       label: What type of deployment is most preferred?
       options:
@@ -78,7 +78,7 @@ body:
       required: true
 
   - type: dropdown
-    id: deployment-preference
+    id: deployment-preference3
     attributes:
       label: Do you want confidential information included?
       options:
@@ -210,7 +210,7 @@ body:
       required: true
 
   - type: dropdown
-    id: deployment-prefernce
+    id: deployment-prefernce4
     attributes:
       label: Would you like the system to incorporate other types of documentation in the future?
       options:
