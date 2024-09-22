@@ -9,25 +9,32 @@ from sentence_transformers import SentenceTransformer
 from langdetect import detect
 from googletrans import Translator
 
-# Load environment variables
+# Step 1: Load environment variables
 load_dotenv()
 
-# Initialize Supabase client
+# Step 2: Initialize Supabase client
+# This creates a connection to our Supabase database
 supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
-# Initialize FastAPI app
+# Step 3: Initialize FastAPI app
+# This creates the main application object
 app = FastAPI()
 
-# Initialize sentence transformer model
+# Step 4: Initialize sentence transformer model
+# This model will be used to create embeddings for documents and queries
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
-# Initialize translator
+# Step 5: Initialize translator
+# This will be used to translate queries into English if they're in a different language
 translator = Translator()
 
-# OAuth2 scheme for basic authentication
+# Step 6: Set up OAuth2 scheme for basic authentication
+# This ensures that only authorized users can access the API
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# Pydantic models
+# Step 7: Define Pydantic models
+# These models define the structure of our data
+
 class Document(BaseModel):
     id: int
     content: str
@@ -36,43 +43,64 @@ class Document(BaseModel):
 class Query(BaseModel):
     text: str
 
-# Helper functions
+# Step 8: Define helper functions
+
 def embed_text(text: str) -> List[float]:
+    """
+    Convert text into a vector embedding
+    """
     return model.encode(text).tolist()
 
 def translate_text(text: str, target_language: str = 'en') -> str:
+    """
+    Detect the language of the input text and translate it to the target language if necessary
+    """
     source_language = detect(text)
     if source_language != target_language:
         return translator.translate(text, src=source_language, dest=target_language).text
     return text
 
-# Routes
+# Step 9: Define API routes
+
 @app.post("/documents/")
 async def create_document(document: Document, token: str = Depends(oauth2_scheme)):
+    """
+    Create a new document in the database
+    """
+    # Generate embedding for the document content
     embedding = embed_text(document.content)
+    # Insert the document and its embedding into the database
     result = supabase.table("documents").insert({"content": document.content, "embedding": embedding}).execute()
     return {"message": "Document created successfully", "id": result.data[0]['id']}
 
 @app.post("/search/")
 async def search_documents(query: Query, token: str = Depends(oauth2_scheme)):
+    """
+    Search for documents similar to the given query
+    """
     # Translate query to English if it's in a different language
     translated_query = translate_text(query.text)
     
     # Create embedding for the query
     query_embedding = embed_text(translated_query)
     
-    # Perform vector search
+    # Perform vector search using the custom SQL function in Supabase
     result = supabase.rpc('match_documents', {'query_embedding': query_embedding, 'match_threshold': 0.5, 'match_count': 5}).execute()
     
     return result.data
 
 @app.get("/documents/{document_id}")
 async def get_document(document_id: int, token: str = Depends(oauth2_scheme)):
+    """
+    Retrieve a specific document by its ID
+    """
+    # Query the database for the document with the given ID
     result = supabase.table("documents").select("*").eq("id", document_id).execute()
     if not result.data:
         raise HTTPException(status_code=404, detail="Document not found")
     return result.data[0]
 
+# Step 10: Run the application
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
