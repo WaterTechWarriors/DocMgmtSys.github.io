@@ -1,0 +1,78 @@
+import os
+from typing import List
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer
+from pydantic import BaseModel
+from supabase import create_client, Client
+from dotenv import load_dotenv
+from sentence_transformers import SentenceTransformer
+from langdetect import detect
+from googletrans import Translator
+
+# Load environment variables
+load_dotenv()
+
+# Initialize Supabase client
+supabase: Client = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
+
+# Initialize FastAPI app
+app = FastAPI()
+
+# Initialize sentence transformer model
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+# Initialize translator
+translator = Translator()
+
+# OAuth2 scheme for basic authentication
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# Pydantic models
+class Document(BaseModel):
+    id: int
+    content: str
+    embedding: List[float]
+
+class Query(BaseModel):
+    text: str
+
+# Helper functions
+def embed_text(text: str) -> List[float]:
+    return model.encode(text).tolist()
+
+def translate_text(text: str, target_language: str = 'en') -> str:
+    source_language = detect(text)
+    if source_language != target_language:
+        return translator.translate(text, src=source_language, dest=target_language).text
+    return text
+
+# Routes
+@app.post("/documents/")
+async def create_document(document: Document, token: str = Depends(oauth2_scheme)):
+    embedding = embed_text(document.content)
+    result = supabase.table("documents").insert({"content": document.content, "embedding": embedding}).execute()
+    return {"message": "Document created successfully", "id": result.data[0]['id']}
+
+@app.post("/search/")
+async def search_documents(query: Query, token: str = Depends(oauth2_scheme)):
+    # Translate query to English if it's in a different language
+    translated_query = translate_text(query.text)
+    
+    # Create embedding for the query
+    query_embedding = embed_text(translated_query)
+    
+    # Perform vector search
+    result = supabase.rpc('match_documents', {'query_embedding': query_embedding, 'match_threshold': 0.5, 'match_count': 5}).execute()
+    
+    return result.data
+
+@app.get("/documents/{document_id}")
+async def get_document(document_id: int, token: str = Depends(oauth2_scheme)):
+    result = supabase.table("documents").select("*").eq("id", document_id).execute()
+    if not result.data:
+        raise HTTPException(status_code=404, detail="Document not found")
+    return result.data[0]
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
